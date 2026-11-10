@@ -9,6 +9,16 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/', redirect: '/courses' },
+        {
+      path: '/login',
+      component: () => import('../pages/LoginPage.vue'),
+      meta: { guestOnly: true },
+    },
+    {
+      path: '/dashboard',
+      component: () => import('../pages/DashboardPage.vue'),
+      meta: { requiresAuth: true },
+    },
     { path: '/courses', component: CoursesPage },
     {
       path: '/courses/:id',
@@ -25,5 +35,18 @@ const router = createRouter({
     },
   ],
 })
+router.beforeEach((to) => {
+  const isLoggedIn = Boolean(localStorage.getItem('authToken'))
 
+  if (to.meta.requiresAuth && !isLoggedIn) {
+    return {
+      path: '/login',
+      query: { redirect: to.fullPath },
+    }
+  }
+
+  if (to.meta.guestOnly && isLoggedIn) {
+    return '/dashboard'
+  }
+})
 export default router
