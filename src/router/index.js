@@ -8,6 +8,10 @@ import CourseReviewsPage from '../pages/CourseReviewsPage.vue'
 const router = createRouter({
   history: createWebHistory(),
   routes: [
+        {
+      path: '/:pathMatch(.*)*',
+      component: () => import('../pages/NotFoundPage.vue'),
+    },
     { path: '/', redirect: '/courses' },
         {
       path: '/login',
